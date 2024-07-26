@@ -2,7 +2,7 @@ import { ErrorCodes } from "./ErrorCodes";
 
 export class HttpError extends Error {
   private _statusCode: ErrorCodes;
-  constructor(code: ErrorCodes, message: string, stack?: string) {
+  constructor(code: ErrorCodes, message: any, stack?: string) {
     super(message);
     Object.setPrototypeOf(this, HttpError.prototype);
     this._statusCode = code;

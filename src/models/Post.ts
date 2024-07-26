@@ -1,9 +1,11 @@
 import sequelize from "../config/config";
 import Sequelize from 'sequelize';
 import Category from "./Category";
+import Comment from "./Comment";
+import PostCategory from "./PostCategory";
 
 
-const Post = sequelize.define("Post", {
+const Post = sequelize.define("post", {
   title: {
     type: Sequelize.DataTypes.STRING,
     allowNull: false
@@ -14,11 +16,14 @@ const Post = sequelize.define("Post", {
   }
 })
 
+
 Post.belongsToMany(Category, {
-  through: "PostCategory"
+  through: PostCategory
 });
 Category.belongsToMany(Post, {
-  through: "PostCategory"
+  through: PostCategory
 });
 
+Post.hasMany(Comment);
+Comment.belongsTo(Post);
 export default Post;

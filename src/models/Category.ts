@@ -1,10 +1,11 @@
 import sequelize from "../config/config";
 import Sequelize from "sequelize";
 
-const Category = sequelize.define("Category",{
+const Category = sequelize.define("category",{
   name:{
     type:Sequelize.DataTypes.STRING,
-    allowNull:false
+    allowNull:false,
+    unique:true
   }
 })
 

@@ -2,17 +2,18 @@ import sequelize from "../config/config";
 import Sequelize from "sequelize";
 import Post from "./Post";
 import Comment from "./Comment";
-import crypto from 'crypto'
 
 
-const User = sequelize.define("User", {
+const User = sequelize.define("user", {
   nickname: {
     type: Sequelize.DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    unique:true
   },
   username: {
     type: Sequelize.DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    unique:true
   },
   password: {
     type: Sequelize.DataTypes.STRING,
