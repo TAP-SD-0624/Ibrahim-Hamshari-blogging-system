@@ -9,7 +9,8 @@ if (!dbUsername || !dbPassword) {
 
  const sequelize = new Sequelize('Blog', dbUsername, dbPassword, {
   host: 'localhost',
-  dialect: 'mysql'
+  dialect: 'mysql',
+  logging:false
 });
 
 

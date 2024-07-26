@@ -5,8 +5,8 @@ import userDTO from "../DTO/userDTO";
 export async function createUser(req: Request, res: Response, next: NextFunction) {
   try {
     const { nickname, username, password } = req.body;
-    await User.create({ nickname, username, password });
-    res.status(201).json({ status: "success" });
+    const data = await User.create({ nickname, username, password });
+    res.status(201).json({ status: "success",data:data.dataValues.id });
   }
   catch (err) {
     throw err;
@@ -20,7 +20,7 @@ export async function getAllUsers(req: Request, res: Response, next: NextFunctio
     const users: Array<userDTO> = (await User.findAll({
       attributes: ["id","nickname", "username", "password"]
     })) as Array<userDTO>
-    res.status(200).json({ status: "success", data: users });
+    res.status(200).json({ status: "success", data: users});
   }
   catch (err) {
     throw err;
@@ -31,8 +31,9 @@ export async function getUserDetails(req: Request, res: Response, next: NextFunc
   const id = req.params.userId;
   try {
     const user: userDTO = (await User.findByPk(id, {
-      attributes: ["nickname", "username", "password"]
+      attributes: ["id","nickname", "username", "password"]
     })) as userDTO;
+    
     res.status(200).json({ status: "success", data: user });
   }
   catch (err) {

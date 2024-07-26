@@ -1,6 +1,6 @@
-name: Testing
+name: baseline
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   testing:
@@ -12,4 +12,4 @@ jobs:
           node-version: '20'
       - run: npm install
       - run: npm run build
-      - run: npm test
+      - run: npm testflow

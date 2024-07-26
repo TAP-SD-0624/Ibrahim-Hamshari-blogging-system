@@ -23,15 +23,15 @@ export async function getAllPostCategories(req: Request, res: Response, next: Ne
       {
         attributes: [],
         include: {
-          attributes:["name"],
-          model:Category,
-          through:{
-            attributes:[]
+          attributes: ["name"],
+          model: Category,
+          through: {
+            attributes: []
           }
         }
       })
-      const data:Array<CategoryDTO> = postCategories?.dataValues.categories;
-      res.status(200).json({ status: "success", data })
+    const data: Array<CategoryDTO> = postCategories?.dataValues.categories;
+    res.status(200).json({ status: "success", data })
   }
   catch (err) {
     throw err;
@@ -41,8 +41,8 @@ export async function getAllPostCategories(req: Request, res: Response, next: Ne
 export async function createNewCategory(req: Request, res: Response, next: NextFunction) {
   const { name } = req.body;
   try {
-    await Category.create({ name });
-    res.status(201).json({ status: "success" })
+    const category = await Category.create({ name });
+    res.status(201).json({ status: "success", data: category.dataValues.id })
   }
   catch (err) {
     throw err;
@@ -57,6 +57,18 @@ export async function getAllCategories(req: Request, res: Response, next: NextFu
     res.status(200).json({ status: "success", data });
   }
   catch (err) {
+    throw err;
+  }
+}
+
+export async function deleteCategory(req: Request, res: Response, next: NextFunction) {
+  const id = req.params.categoryId;
+  try {
+    await Category.destroy({
+      where: { id }
+    })
+    res.status(200).json({status:"success"});
+  } catch (err) {
     throw err;
   }
 }

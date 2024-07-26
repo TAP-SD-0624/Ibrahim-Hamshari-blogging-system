@@ -8,8 +8,8 @@ import postDTO from "../DTO/postDTO";
 export async function createPost(req: Request, res: Response, next: NextFunction) {
   const { title, body, userId } = req.body;
   try {
-    await Post.create({ title, body, userId });
-    res.status(200).json({ status: "success" })
+    const post = await Post.create({ title, body, userId });
+    res.status(201).json({ status: "success", data:post.dataValues.id })
   }
   catch (err) {
     throw err;
@@ -20,7 +20,7 @@ export async function getAllPosts(req: Request, res: Response, next: NextFunctio
   try {
     // this is not best practice you should never return all of the users.
     const posts = (await Post.findAll({
-      attributes: ["title", "body"],
+      attributes: ["id","title", "body"],
       include: [
         {
           attributes: ["nickname"],
@@ -35,7 +35,6 @@ export async function getAllPosts(req: Request, res: Response, next: NextFunctio
         }
       ]
     }))
-    console.log(posts);
     res.status(200).json({ status: "success", data: posts });
   }
   catch (err) {
@@ -47,7 +46,7 @@ export async function getPostDetails(req: Request, res: Response, next: NextFunc
   const id = req.params.postId;
   try {
     const post: postDTO = (await Post.findByPk(id, {
-      attributes:["title","body"],
+      attributes:["id","title","body"],
       include: [
         {
           attributes: ["nickname"],
