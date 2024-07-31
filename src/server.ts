@@ -3,7 +3,8 @@ import dotenv from 'dotenv'
 dotenv.config();
 
 import path from 'path';
-
+import passport from 'passport';
+import strategy from './config/auth';
 import sequelize from './config/config';
 import { logger } from './utils/loggers';
 
@@ -12,6 +13,8 @@ sequelize.authenticate().then(() => {
 }).catch((err: Error) => {
   logger.error(err.message);
 })
+
+passport.use(strategy);
 
 import "./models/User"
 import "./models/Post"
@@ -35,9 +38,9 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use("/api/user", userRouter)
 app.use("/api/post", postRouter)
 app.use("/api/category", categoryRouter)
-
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
-  res.status(err.statusCode).json({ error:isJSONParsable(err.message)? JSON.parse(err.message):err.message });
+  const statusCode = err.statusCode ? err.statusCode : 500;
+  res.status(statusCode).json({ error: isJSONParsable(err.message) ? JSON.parse(err.message) : err.message });
 
 })
 

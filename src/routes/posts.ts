@@ -6,17 +6,21 @@ import { createComment, getAllComments } from '../controllers/comments';
 import { createPostValidator, updatePostValidator } from '../validators/postValidator';
 import { createCategoryValidator } from '../validators/categoryValidator';
 import { createCommentValidator } from '../validators/commentValidator';
+import passport from 'passport';
 
 const router: Router = express.Router();
-
-router.post("/", createPostValidator, tryCatch(createPost));
 router.get("/", tryCatch(getAllPosts));
+router.get("/:postId/comments", tryCatch(getAllComments));
+router.use(passport.authenticate("jwt",{
+  failureMessage:"Please login first",
+  session:false
+}))
+router.post("/", createPostValidator, tryCatch(createPost));
 router.get("/:postId", tryCatch(getPostDetails));
 router.put("/:postId", updatePostValidator, tryCatch(updatePost));
 router.delete("/:postId", tryCatch(deletePost));
 router.post("/:postId/categories", createCategoryValidator, tryCatch(createCategory));
 router.get("/:postId/categories", tryCatch(getAllPostCategories));
 router.post("/:postId/comments", createCommentValidator, tryCatch(createComment));
-router.get("/:postId/comments", tryCatch(getAllComments));
 
 export default router;

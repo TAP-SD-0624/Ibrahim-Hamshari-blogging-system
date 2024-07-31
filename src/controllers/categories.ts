@@ -3,11 +3,20 @@ import Category from "../models/Category";
 import PostCategory from "../models/PostCategory";
 import CategoryDTO from "../DTO/categoryDTO";
 import Post from "../models/Post";
+import userDTO from "../DTO/userDTO";
+import { HttpError } from "../utils/HttpError";
 
 export async function createCategory(req: Request, res: Response, next: NextFunction) {
+  const user: userDTO = req.user as userDTO;
+  const userId = user.id;
+
   const postId = req.params.postId;
   const { categoryId } = req.body;
   try {
+    const post = await Post.findOne({ where: { userId, id:postId } });
+    if (!post) {
+      throw new HttpError(404, "No Such Resource!");
+    }
     await PostCategory.create({ postId, categoryId });
     res.status(201).json({ status: "success" });
   }
@@ -17,11 +26,15 @@ export async function createCategory(req: Request, res: Response, next: NextFunc
 }
 
 export async function getAllPostCategories(req: Request, res: Response, next: NextFunction) {
+  const user: userDTO = req.user as userDTO;
+  const userId = user.id;
+
   const postId = req.params.postId;
   try {
-    const postCategories = await Post.findByPk(postId,
+    const postCategories = await Post.findOne(
       {
         attributes: [],
+        where: { id: postId, userId },
         include: {
           attributes: ["name"],
           model: Category,
@@ -67,7 +80,7 @@ export async function deleteCategory(req: Request, res: Response, next: NextFunc
     await Category.destroy({
       where: { id }
     })
-    res.status(200).json({status:"success"});
+    res.status(200).json({ status: "success" });
   } catch (err) {
     throw err;
   }

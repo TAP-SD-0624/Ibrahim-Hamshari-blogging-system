@@ -2,7 +2,7 @@ import sequelize from "../config/config";
 import Sequelize from "sequelize";
 import Post from "./Post";
 import Comment from "./Comment";
-
+import bcrypt from 'bcrypt'
 
 const User = sequelize.define("user", {
   nickname: {
@@ -18,6 +18,11 @@ const User = sequelize.define("user", {
   password: {
     type: Sequelize.DataTypes.STRING,
     allowNull: false,
+    set(value:string){
+      const salt =  bcrypt.genSaltSync();
+      const encrypted = bcrypt.hashSync(value,salt);
+      this.setDataValue("password",encrypted);
+    }
   }
 })
 
